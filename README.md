@@ -1,4 +1,5 @@
-Sistema de Registro de Visitantes
+#Sistema de Registro de Visitantes
+
 Este sistema permite registrar y gestionar visitantes utilizando la cédula de identidad. Implementa reconocimiento óptico de caracteres (OCR) para extraer la información de la cédula y almacenarla en un registro.
 Requisitos de Instalación
 Para ejecutar correctamente este sistema, es necesario instalar las siguientes dependencias:
