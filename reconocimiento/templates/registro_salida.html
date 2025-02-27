@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_predeterminado01.css' %}">
+</head>
+
+
+<body>
+    <div class="container">
+
+        <img id="registro_visitantes" src="{% static 'images/Salida.png' %}" alt="Descripción de la imagen">
+       
+        <div class="table-container">
+            <table class="responsive-table">
+
+                <tr>
+                    <th>Nombre</th>
+                    <td>{{ nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Apellidos</th>
+                    <td> {{ apellido_paterno }} {{ apellido_materno }}</td>
+                </tr>
+                <tr>
+                    <th>RUT</th>
+                    <td>{{RUT }}</td>
+                </tr>
+                <tr>
+                    <th>Fecha</th>
+                    <td>{{ fecha_actual.day |stringformat:"02d" }}/{{ fecha_actual.month |stringformat:"02d" }}/{{fecha_actual.year }}</td>
+                </tr>
+                <tr>
+                    <th>Hora Salida</th>
+                    <td>{{ hora_actual.hour|stringformat:"02d" }}:{{ hora_actual.minute|stringformat:"02d" }}</td>
+                </tr>
+                
+            </table>
+        </div>
+            
+
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" value="Volver">
+        </form>
+    </div>
+
+
+</body>
+
+</html>
+
+

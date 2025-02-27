@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_predeterminado01.css' %}">
+   
+
+    </head>
+
+<body>
+    <div class="container">
+
+        <img id="registro_visitantes" src="{% static 'images/Colaborador.png' %}" alt="Descripción de la imagen">
+
+
+        <table class="responsive-table">
+            <tr>
+                <th>Nombre</th>
+                <td>{{ nombre }}</td>
+            </tr>
+            <tr>
+                <th>Apellidos</th>
+                <td>{{ apellido_paterno }} {{ apellido_materno }}</td>
+            </tr>
+            <tr>
+                <th>RUT</th>
+                <td>{{ RUT }}</td>
+            </tr>
+
+            <tr>
+                <th>Colaborador</th>
+                <td>
+                    <label for="Colaborador"> </label>
+                    <input list="trabajador" id="ColaboradorID" name="Colaborador" placeholder="Seleccione Colaborador"
+                        required>
+                    <datalist id="trabajador">
+                        {% for trabajador in trabajadores %}
+                        <option
+                            value="{{ trabajador.trabajador_nombre }} {{ trabajador.trabajador_apellido }} {{ trabajador.trabajador_apellido2 }}"
+                            id="{{ trabajador.trabajador_ID }}">RUT: {{ trabajador.trabajador_ID }}</option>
+                        {% endfor %}
+                    </datalist>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Observación sobre la Visita</th>
+                <td>
+                    <label for="observacion"></label>
+                    <textarea id="observacion" name="observacion" rows="6"></textarea>
+                </td>
+            </tr>
+        </table>
+
+        <form action="{% url 'procesar_post_colaborador' %}" method="post" id="form-colaborador"
+            onsubmit="return validateForm()">
+            {% csrf_token %}
+            <input type="hidden" id="nombreColaborador" name="nombreColaborador">
+            <input type="hidden" id="idColaborador" name="idColaborador">
+            <input type="hidden" id="observacionHidden" name="observacionHidden">
+            <input type="submit" value="Siguiente">
+        </form>
+
+        <form action="{% url 'datos' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" value="Volver">
+        </form>
+
+    </div>
+
+    <script>function validateForm() {
+            var selectedColaborador = document.getElementById("ColaboradorID").value;
+            var options = document.querySelectorAll("#trabajador option");
+            var isValid = false;
+
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === selectedColaborador) {
+                    isValid = true;
+                    break;
+                }
+            }
+
+            if (!isValid) {
+                alert("Por favor seleccione un colaborador de la lista proporcionada.");
+                return false;
+            } else {
+                var selectedColaboradorID = document.querySelector(`#trabajador option[value='${selectedColaborador}']`).getAttribute('id');
+                document.getElementById("nombreColaborador").value = selectedColaborador;
+                document.getElementById("idColaborador").value = selectedColaboradorID;
+
+                var observacion = document.getElementById('observacion').value;
+                document.getElementById("observacionHidden").value = observacion;
+
+                return true;
+            }
+        }
+        var observacionField = document.getElementById('observacion');
+        var maxLength = 200;
+
+        observacionField.addEventListener('input', function () {
+            if (observacionField.value.length > maxLength) {
+                observacionField.value = observacionField.value.slice(0, maxLength);
+            }
+        })
+    </script>
+
+</body>
+
+</html>

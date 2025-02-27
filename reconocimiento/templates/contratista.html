@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_contratista01.css' %}">
+</head>
+
+<body>
+    <div class="container">
+
+        <img id="registro_visitantes" src="{% static 'images/Contratista.png' %}" alt="Descripción de la imagen">
+
+
+        <table class="responsive-table">
+            <tr>
+                <th>Nombre</th>
+                <td>{{ nombre }}</td>
+            </tr>
+            <tr>
+                <th>Apellidos</th>
+                <td>{{ apellido_paterno }} {{ apellido_materno }}</td>
+            </tr>
+            <tr>
+                <th>RUT</th>
+                <td>{{ RUT }}</td>
+            </tr>
+
+            <tr>
+                <th>Agregar empresa si no está</th>
+                <td>
+                    <form action="{% url 'agregar_empresa' %}" method="post">
+                        {% csrf_token %}
+                        <div style="display: flex;">
+                            <label for="empresa"></label>
+                            <input type="text" id="empresa" name="empresa" placeholder="Nombre empresa" required
+                                style="width: 50%;">
+                            <input type="submit" value="Agregar Empresa" style="width: 50%; margin-left: 10px;">
+                        </div>
+                    </form>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Empresa</th>
+                <td>
+                    <label for="Emp"></label>
+                    <input list="empresas" id="EmpID" name="Emp" placeholder="Seleccione empresa" required>
+                    <datalist id="empresas">
+                        {% for empresa in nombre_empresas %}
+                        <option value="{{ empresa.empresa_nombre }}" id="{{ empresa.empresa_ID }}"></option>
+                        {% endfor %}
+                    </datalist>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Observación sobre la Visita</th>
+                <td>
+                    <label for="observacion"></label>
+                    <textarea id="observacion" name="observacion" rows="6"></textarea>
+                </td>
+            </tr>
+        </table>
+
+        <form action="{% url 'procesar_post_contratista' %}" method="post" id="form-empresa" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <p></p>
+            <input type="hidden" id="nombreEmpresa" name="nombreEmpresa">
+            <input type="hidden" id="idEmpresa" name="idEmpresa">
+            <!-- Campo oculto para la observación -->
+            <input type="hidden" id="observacionHidden" name="observacionHidden">
+            <input type="submit" class="centered-buttons" value="Siguiente">
+        </form>
+
+        <form action="{% url 'datos' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" class="centered-buttons" value="Volver">
+        </form>
+    </div>
+
+    <script src="{% static 'js/contratista.js' %}"></script> <!-- Script externo -->
+</body>
+
+</html>

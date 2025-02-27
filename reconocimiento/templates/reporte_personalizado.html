@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reportes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_reporte01.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
+
+</head>
+
+<body>
+    <div class="container">
+        <img id="registro_visitantes" src="{% static 'images/Informe.png' %}" alt="Descripción de la imagen">
+
+        <ul>
+            <li>
+                <table class="responsive-table">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>RUT</th>
+                        <th>Fecha</th>
+                        <th>Hora llegada</th>
+                        <th>Hora salida</th>
+                        <th>Tipo visitante</th>
+                        <th>Lugar</th>
+                        <th>Colaborador</th>
+                        <th>Observacion</th>
+                    </tr>
+
+                    {% for visita in page_obj %}
+
+                    <tr>
+                        <td>{{ visita.visita_nombre }} {{ visita.visita_apellido_1 }} {{ visita.visita_apellido_2 }}</td>
+                        <td>{{ visita.visita_rut }}</td>
+                        <td>{{ visita.visita_fecha_llegada.day|stringformat:"02d"}}/{{visita.visita_fecha_llegada.month|stringformat:"02d"}}/{{visita.visita_fecha_llegada.year }}</td>
+                        <td>{{ visita.visita_fecha_llegada.hour|stringformat:"02d"  }}:{{ visita.visita_fecha_llegada.minute|stringformat:"02d" }}</td>
+                        <td>{{ visita.visita_fecha_salida.hour|stringformat:"02d"  }}:{{ visita.visita_fecha_salida.minute|stringformat:"02d" }}</td>
+                        <td>{{ visita.tipo_ID.tipo_nombre }}</td>
+                        <td>{{ visita.lugar_ID.lugar_nombre }}</td>
+                        <td>{{ visita.trabajador_ID.trabajador_nombre }} {{ visita.trabajador_ID.trabajador_apellido }} {{ visita.trabajador_ID.trabajador_apellido2 }}</td>
+                        <td>{{ visita.visita_observacion }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; Primera</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                        </span>
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </li>
+
+            <li>
+                <form action="{% url 'formulario_filtros' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Volver">
+                </form>
+            </li>
+
+            <li>
+                <form action="{% url 'exportar_a_excel' %}" method="get">
+                    {% csrf_token %}
+                    <input type="submit" value="Descargar Informe Detallado">
+                </form>
+            </li>
+        </ul>
+
+    </div>
+</body>
+
+</html>

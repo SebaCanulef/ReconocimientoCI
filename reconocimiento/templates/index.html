@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_index01.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        {% if error_message %}
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
+        <img id="registro_visitantes" src="{% static 'images/REGISTRO_VISITA.png' %}" alt="Descripción de la imagen">
+
+        <div id="video-container">
+            <video id="video" autoplay></video>
+        </div>
+
+        <p></p>
+        <button id="capture">Capturar Imagen</button>
+        <canvas id="canvas"></canvas>
+
+        <form id="image-form" action="{% url 'procesar_imagen' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="img_data" id="img_data">
+        </form>
+
+        <div class="button-container">
+            <form class="button-form" action="{% url 'formulario_filtros' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Generar Informe">
+            </form>
+
+            <form class="button-form" action="{% url 'reporte_visitas_activas' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Ver Visitas Activas">
+            </form>
+        </div>
+        </form>
+
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('capture');
+        const canvas = document.getElementById('canvas');
+        const imgDataInput = document.getElementById('img_data');
+        const initialConstraints = { video: { facingMode: 'environment' } };
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(initialConstraints);
+                video.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing the camera:', err);
+            }
+        }
+
+        function captureImage() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgDataURL = canvas.toDataURL('image/png');
+            imgDataInput.value = imgDataURL;
+            document.getElementById('image-form').submit();
+        }
+
+        captureButton.addEventListener('click', captureImage);
+
+        // Capturar imagen al presionar la tecla de espacio
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault(); // Evitar que la página haga scroll al presionar espacio
+                captureImage();
+            }
+        });
+
+        initCamera();
+    </script>
+
+</body>
+
+</html>

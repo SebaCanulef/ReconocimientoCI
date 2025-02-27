@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_predeterminado01.css' %}">
+</head>
+
+<body>
+    <div class="container">
+
+        <img id="registro_visitantes" src="{% static 'images/Ubicacion.png' %}" alt="Descripción de la imagen">
+
+   
+        <table class="responsive-table">
+            <tr>
+                <th>Nombre</th>
+                <td>{{ nombre }}</td>
+            </tr>
+            <tr>
+                <th>Apellidos</th>
+                <td>{{ apellido_paterno }} {{ apellido_materno }}</td>
+            </tr>
+            <tr>
+                <th>RUT</th>
+                <td>{{ RUT }}</td>
+            </tr> 
+            
+            <tr>
+                <th>Ubicacion</th>
+                <td><label for="Ubicacion"></label>
+                    <input list="lugar" id="UbicacionID" name="Ubicacion" placeholder="Seleccione ubicacion" required>
+                    <datalist id="lugar">
+                        {% for lugar in lista_lugares %}
+                        <option value="{{ lugar.lugar_nombre }}" id="{{ lugar.lugar_ID }}"></option>
+                        {% endfor %}
+                    </datalist></td>
+            </tr>
+        </table>
+        <form action="{% url 'procesar_post_ubicacion' %}" method="post" id="form-ubicacion" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <input type="hidden" id="nombreLugar" name="nombreLugar">
+            <input type="hidden" id="idLugar" name="idLugar">
+            <input type="submit" value="Siguiente">
+        </form>
+
+        {% if tipo_visitante_id == 1 %}
+        <form action="{% url 'apoderado' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" value="Volver">
+        </form>
+        {% endif %}
+
+        {% if tipo_visitante_id == 2 %}
+        <form action="{% url 'contratista' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" value="Volver">
+        </form>
+        {% endif %}
+
+        {% if tipo_visitante_id == 3 %}
+        <form action="{% url 'entrevista' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" value="Volver">
+        </form>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'js/ubicacion.js' %}"></script> <!-- Script externo -->
+
+</body>
+
+
+</html>

@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_predeterminado01.css' %}">
+</head>
+
+<body>
+    <div class="container">
+
+        <img id="registro_visitantes" src="{% static 'images/Datos.png' %}" alt="Descripción de la imagen">
+        
+        <div class="table-container">
+            <table class="responsive-table">
+
+                <tr>
+                    <th>Nombre</th>
+                    <td>{{ nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Apellidos</th>
+                    <td>{{ apellido_paterno }} {{ apellido_materno }}</td>
+                </tr>
+                <tr>
+                    <th>RUT</th>
+                    <td>{{RUT }}</td>
+                </tr>
+                <tr>
+                    <th>Fecha</th>
+                    <td>{{ fecha_actual.day |stringformat:"02d" }}/{{ fecha_actual.month |stringformat:"02d"}}/{{fecha_actual.year }}</td>
+                </tr>
+                <tr>
+                    <th>Hora</th>
+                    <td>{{ hora_actual.hour|stringformat:"02d" }}:{{ hora_actual.minute|stringformat:"02d" }}</td>
+                </tr>
+                <tr>
+                    <th>Tipo de Visitante</th>
+                    <td>
+                        <label for="tipoVisitante"></label>
+                        <select id="tipoVisitante" name="tipoVisitante">
+                            {% for tipo in tipos_de_visitantes %}
+                            <option value="{{ tipo.tipo_nombre }}">{{ tipo.tipo_nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <form id="visitorForm" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="tipoVisitanteID" id="tipoVisitanteID" value="">
+            <input type="submit" value="Siguiente">
+        </form>
+
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <p></p>
+            <input type="submit" value="Volver">
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("visitorForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevenir el envío del formulario
+            // Redirigir a la página correspondiente
+            if (tipoVisitante.value === "Apoderado") {
+                window.location.href = "{% url 'apoderado' %}";
+            }
+
+            if (tipoVisitante.value === "Contratista") {
+                window.location.href = "{% url 'contratista' %}";
+            }
+
+            if (tipoVisitante.value === "Entrevista") {
+                window.location.href = "{% url 'entrevista' %}";
+            }
+            if (tipoVisitante.value === "Otros") {
+                window.location.href = "{% url 'otras_visitas' %}";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Visitantes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_predeterminado01.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <img id="registro_visitantes" src="{% static 'images/Datos.png' %}" alt="Descripción de la imagen">
+
+        <table class="responsive-table">
+            <tr>
+                <th>Nombre</th>
+                <td>{{ nombre }} {{ apellido_paterno }} {{ apellido_materno }}</td>
+            </tr>
+
+            <tr>
+                <th>RUT</th>
+                <td>{{ RUT }}</td>
+            </tr>
+
+            <tr>
+                <th>Fecha</th>
+                <td>{{ fecha_actual.day |stringformat:"02d" }}/{{ fecha_actual.month|stringformat:"02d" }}/{{fecha_actual.year }}</td>
+            </tr>
+
+            <tr>
+                <th>Hora llegada</th>
+                <td>{{ hora_actual.hour |stringformat:"02d" }}:{{ hora_actual.minute |stringformat:"02d" }}</td>
+            </tr>
+
+            <tr>
+                <th>Tipo Visitante</th>
+                <td>{{ tipo_visitante_id }}</td>
+            </tr>
+
+            <tr>
+                <th>Lugar</th>
+                <td>{{ lugar_ID }}</td>
+            </tr>
+
+            <tr>
+                <th>Colaborador</th>
+                <td>{{ trabajador_nombre }} {{ trabajador_apellido }} {{ trabajador_apellido2 }}</td>
+            </tr>
+            <tr>
+                <th>Empresa</th>
+                <td>{{ empresa_ID }}</td>
+            </tr>
+            
+            <tr>
+                <th>Observacion</th>
+                <td>{{ observacion }}</td>
+            </tr>
+        </table>
+
+        <form action="{% url 'guardar_visita' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Guardar">
+        </form>
+
+        <p></p>
+
+        <form action="{% url 'ubicacion' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Volver">
+        </form>
+
+    </div>
+
+</body>
+
+
+</html>

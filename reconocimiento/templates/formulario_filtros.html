@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Filtrar Informe</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo_predeterminado01.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <img id="registro_visitantes" src="{% static 'images/Filtrar_informe.png' %}" alt="Descripción de la imagen">
+
+        <form action="{% url 'reporte_personalizado' %}" method="post" id="form-trabajador">
+            {% csrf_token %}
+            <p></p>
+            <table class="responsive-table">
+                <tr>
+                    <th>RUT</th>
+                    <td><label for="RUT"></label>
+                    <input list="ruts" id="RUT" name="RUT" placeholder="Ingrese RUT sin puntos ni digito verificador">
+                    <datalist id="ruts">
+                        {% for rut in lista_rut %}
+                        <option value="{{ rut }}"></option>
+                        {% endfor %}
+                    </datalist></td>
+                </tr>
+
+                <tr>
+                    <th>Tipo de visita</th>
+                    <td><label for="tipo"></label>
+                        <select id="tipo" name="tipo">
+                            <option value="">--Seleccione un tipo de visitante--</option>
+                            <!-- Opción para dejar el campo vacío -->
+                            {% for tipo in lista_tipo %}
+                            <option value="{{ tipo.tipo_nombre }}">{{ tipo.tipo_nombre }}</option>
+                            {% endfor %}
+                        </select></td>
+                </tr>
+
+                <tr>
+                    <th>Empresa</th>
+                    <td><label for="empresa"></label>
+                        <input list="empresas" id="empresa" name="empresa" placeholder="Seleccione empresa">
+                        <datalist id="empresas">
+                            {% for empresa in lista_empresa %}
+                            <option value="{{ empresa.empresa_nombre }}" id="{{ empresa.empresa_ID }}"></option>
+                            {% endfor %}
+                        </datalist></td>
+                </tr>
+
+                <tr>
+                    <th>Colaborador</th>
+                    <td><label for="trabajador"></label>
+                        <input list="colaboradores" id="trabajadorID" name="trabajador"
+                            placeholder="Seleccione colaborador">
+                        <datalist id="colaboradores">
+                            {% for trabajador in lista_trabajadores %}
+                            <option
+                                value="{{ trabajador.trabajador_nombre }} {{ trabajador.trabajador_apellido }} {{ trabajador.trabajador_apellido2 }}"
+                                id="{{ trabajador.trabajador_ID }}">RUT: {{ trabajador.trabajador_ID }}</option>
+    
+                            {% endfor %}
+                        </datalist>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Lugar</th>
+                    <td><label for="Ubicacion"></label>
+                        <input list="lugar" id="Ubicacion" name="Ubicacion" placeholder="Seleccione ubicacion">
+                        <datalist id="lugar">
+                            {% for lugar in lista_lugares %}
+                            <option value="{{ lugar.lugar_nombre }}" id="{{ lugar.lugar_ID }}"></option>
+                            {% endfor %}
+                        </datalist></td>
+                </tr>
+
+                <tr>
+                    <th>Fecha Inicial</th>
+                    <td><div class="input-container">
+                        <label></label>
+                        <input type="date" name="fecha_inicio" placeholder="Fecha de inicio">
+                    </div></td>
+                </tr>
+
+                <tr>
+                    <th>Fecha Final</th>
+                    <td><div class="input-container">
+                        <label></label>
+                        <input type="date" name="fecha_fin" placeholder="Fecha de fin">
+                    </div></td>
+                </tr>
+            </table>
+               
+                <input type="hidden" id="nombreTrabajador" name="nombreTrabajador">
+                <input type="hidden" id="idTrabajador" name="idTrabajador">
+
+                <p></p>
+                <input type="submit" value="Aplicar Filtros" onclick="getSelectedTrabajador()">
+                <p></p>
+
+        </form>
+
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Volver">
+        </form>
+
+
+    </div>
+
+    <script>
+        function getSelectedTrabajador() {
+            var selectedTrabajador = document.getElementById("trabajadorID").value;
+            var selectedTrabajadorID = document.querySelector(`#colaboradores option[value='${selectedTrabajador}']`).getAttribute('id');
+            document.getElementById("nombreTrabajador").value = selectedTrabajador;
+            document.getElementById("idTrabajador").value = selectedTrabajadorID;
+        }
+    </script>
+
+</body>
+
+
+</html>
